@@ -1,0 +1,12 @@
+entityMoving: true
+hoistingDelay: 40
+droppingDelay: 10
+portcullisMaterials: [ACACIA_FENCE, IRON_BARS, NETHER_BRICK_FENCE, BIRCH_FENCE, CRIMSON_FENCE, DARK_OAK_FENCE, JUNGLE_FENCE, OAK_FENCE, SPRUCE_FENCE, WARPED_FENCE]
+allowFloating: true
+powerBlocks: []
+additionalWallMaterials: []
+startSoundURL: http://mc.pepsoft.org/plugins/portecoulissante/sounds/portcullis_start.wav
+upSoundURL: http://mc.pepsoft.org/plugins/portecoulissante/sounds/portcullis_up.wav
+downSoundURL: http://mc.pepsoft.org/plugins/portecoulissante/sounds/portcullis_down.wav
+soundEffectDistance: 24
+soundEffectVolume: 50

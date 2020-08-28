@@ -1,0 +1,81 @@
+# Whether or not to move entities on top of the portcullis up when it is
+# hoisted:
+entityMoving: true
+
+# The speed of the portcullis. The number is the number of "ticks"
+# between movements of the portcullis. A tick is 1/20 second. In other
+# words, the default hoisting speed of 40 means 2 seconds between
+# movements.
+#
+# The hoisting and dropping speeds are configured separately.
+#
+# If you set this too low your server load may increase exponentially,
+# especially if you have many portcullises on your server!
+#
+# Also don't forget that this is a server wide setting for all
+# portcullises. Make sure that your users have a say and know about it if
+# you change this setting:
+hoistingDelay: 40
+droppingDelay: 10
+
+# The allowed materials for the portcullis. This is a list of block ID's.
+# You can find a list of all possible block ID's at
+# http://www.minecraftwiki.net/wiki/Data_values. You can add values
+# between the brackets, separated by commas.
+#
+# Be very careful when adding block ID's to this list. You don't want any
+# wall or other vertical surface which just happens to be next to a bit
+# of redstone to start flying around!
+#
+# Also don't forget that this is a server wide setting for all
+# portcullises. Make sure that your users have a say and know about it if
+# you change this setting:
+portculliss: [ACACIA_FENCE, IRON_BARS, NETHER_BRICK_FENCE, BIRCH_FENCE, CRIMSON_FENCE, DARK_OAK_FENCE, JUNGLE_FENCE, OAK_FENCE, SPRUCE_FENCE, WARPED_FENCE]
+
+# Whether to allow "floating" portcullises; which in this case
+# specifically means portcullises that are not touching any solid blocks
+# on either side. You can use this to prevent people from having
+# portcullises fly away uncontrolled, either by accident or on purpose.
+#
+# If you set this to "false", portcullises will stop moving if they would
+# lose contact with all solid blocks on either side. In other words, it
+# will always remain in contact with at least one solid block. Note that
+# this only applies to hoisting! When the portcullis is dropping it will
+# always fall all the way until it is blocked by a solid block
+# underneath.
+#
+# Note that it can still lose contact with its power block(s). This means
+# that it is still possible to bridge large distances or to have two
+# power blocks at the extreme ends of the portcullis' travel.
+#
+# Also don't forget that this is a server wide setting for all
+# portcullises. Make sure that your users have a say and know about it if
+# you change this setting:
+allowFloating: true
+
+# The allowed materials for the power blocks (the frame blocks through
+# which the redstone power is delivered to the portcullis). This is a
+# list of block ID's. You can find a list of all possible block ID's at
+# http://www.minecraftwiki.net/wiki/Data_values. If it is empty (the
+# default), any solid block is allowed.
+#
+# By default, the power blocks can be of any solid type. This setting
+# allows you to restrict that, in order to make it harder to build
+# portcullises. It may also slightly improve the performance of the
+# plugin.
+#
+# The value is a list of block ID's between brackets, separated by
+# commas. For instance, if you want to limit power blocks to diamond or
+# lapis lazuli blocks, use the value [22, 57]. If you want to allow any
+# solid block ID, the list should be empty.
+#
+# Don't forget that this is a server wide setting for all portcullises.
+# Make sure that your users have a say and know about it if you change
+# this setting:
+powerBlocks: []
+
+# The distance in blocks for which the sound effects can be heard.
+soundEffectDistance: 24
+
+# The volume in percent at which the sound effects are played.
+soundEffectVolume: 50
