@@ -35,6 +35,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import lombok.Getter;
+
 /**
  *
  * @author pepijn
@@ -143,62 +145,15 @@ public class PortcullisPlugin extends JavaPlugin {
         logger.info("[PorteCoulissante] Plugin version " + getDescription().getVersion() + " by Captain_Chaos enabled");
     }
 
-    public boolean isEntityMovingEnabled() {
-        return entityMovingEnabled;
-    }
-
-    public int getDroppingDelay() {
-        return droppingDelay;
-    }
-
-    public int getHoistingDelay() {
-        return hoistingDelay;
-    }
-
-    public Set<Material> getPortcullisMaterials() {
-        return portcullisMaterials;
-    }
-
-    public Set<Material> getPowerBlocks() {
-        return powerBlocks;
-    }
-
-    public boolean isAllowFloating() {
-        return allowFloating;
-    }
-
-    public boolean isAllPowerBlocksAllowed() {
-        return allPowerBlocksAllowed;
-    }
-
-    public String getStartSoundURL() {
-        return startSoundURL;
-    }
-
-    public String getUpSoundURL() {
-        return upSoundURL;
-    }
-
-    public String getDownSoundURL() {
-        return downSoundURL;
-    }
-
-    public int getSoundEffectDistance() {
-        return soundEffectDistance;
-    }
-
-    public int getSoundEffectVolume() {
-        return soundEffectVolume;
-    }
-
-    public Set<Material> getAdditionalWallMaterials() {
-        return additionalWallMaterials;
-    }
-
+    @Getter
     private boolean entityMovingEnabled;
+    @Getter
     private int hoistingDelay, droppingDelay, soundEffectDistance, soundEffectVolume;
+    @Getter
     private Set<Material> portcullisMaterials, powerBlocks, additionalWallMaterials;
+    @Getter
     private boolean allowFloating, allPowerBlocksAllowed;
+    @Getter
     private String startSoundURL, upSoundURL, downSoundURL;
 
     static final Logger logger = Logger.getLogger("Minecraft.org.reliqcraft");

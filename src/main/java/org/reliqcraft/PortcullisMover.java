@@ -32,8 +32,11 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitScheduler;
+
+import lombok.Getter;
+import lombok.Setter;
+
 import static org.reliqcraft.PortcullisMover.Status.*;
-import static org.reliqcraft.Directions.*;
 
 /**
  *
@@ -44,17 +47,6 @@ public class PortcullisMover implements Runnable {
         this.plugin = plugin;
         this.portcullis = portcullis;
         this.wallMaterials = wallMaterials;
-    }
-
-    public Portcullis getPortcullis() {
-        return portcullis;
-    }
-
-    void setPortcullis(Portcullis portcullis) {
-        if (! portcullis.equals(this.portcullis)) {
-            throw new IllegalArgumentException();
-        }
-        this.portcullis = portcullis;
     }
 
     public void hoist() {
@@ -121,8 +113,8 @@ public class PortcullisMover implements Runnable {
         }
     }
 
-    private boolean movePortcullisUp(Portcullis portcullis) {
-        World world = plugin.getServer().getWorld(portcullis.getWorldName());
+    private boolean movePortcullisUp(final Portcullis portcullis) {
+        final World world = plugin.getServer().getWorld(portcullis.getWorldName());
         if (world == null) {
             // The world is gone!!!
             if (logger.isLoggable(Level.FINE)) {
@@ -130,18 +122,19 @@ public class PortcullisMover implements Runnable {
             }
             return false;
         }
-        int x = portcullis.getX();
-        int z = portcullis.getZ();
-        int y = portcullis.getY();
-        int width = portcullis.getWidth();
-        int height = portcullis.getHeight();
-        BlockFace direction = portcullis.getDirection();
+
+        final int x = portcullis.getX();
+        final int z = portcullis.getZ();
+        final int y = portcullis.getY();
+        final int width = portcullis.getWidth();
+        final int height = portcullis.getHeight();
+        final BlockFace direction = portcullis.getDirection();
 
         // Check whether the relevant chunks (the portcullis might straddle two
         // chunks) are loaded. In theory someone might build a huge portcullis
         // which straddles multiple chunks, but they're on their own... ;-)
-        Set<Point> chunkCoords = getChunkCoords(x, z, direction, width);
-        if (! areChunksLoaded(world, chunkCoords)) {
+        final Set<Point> chunkCoords = getChunkCoords(x, z, direction, width);
+        if (!areChunksLoaded(world, chunkCoords)) {
             if (logger.isLoggable(Level.FINE)) {
                 logger.fine("[PorteCoulissante] Some or all chunks not loaded; cancelling the hoist!");
             }
@@ -165,8 +158,7 @@ public class PortcullisMover implements Runnable {
             return false;
         }
         
-        BlockFace actualDirection = actual(direction);
-        int dx = actualDirection.getModX(), dz = actualDirection.getModZ();
+        int dx = direction.getModX(), dz = direction.getModZ();
         if (! plugin.isAllowFloating()) {
             // Check that the portcullis would not be floating, if that is not
             // allowed
@@ -273,8 +265,7 @@ public class PortcullisMover implements Runnable {
             }
             return false;
         }
-        BlockFace actualDirection = actual(direction);
-        int dx = actualDirection.getModX(), dz = actualDirection.getModZ();
+        int dx = direction.getModX(), dz = direction.getModZ();
         for (int i = 0; i < width; i++) {
             Block block = world.getBlockAt(x + i * dx, y - 1, z + i * dz);
             if (! AIR_MATERIALS.contains(block.getBlockData().getMaterial())) {
@@ -331,11 +322,10 @@ public class PortcullisMover implements Runnable {
         }
     }
 
-    private boolean isOnPortcullis(Location location, Portcullis portcullis) {
+    private boolean isOnPortcullis(final Location location, final Portcullis portcullis) {
         int x = portcullis.getX(), y = portcullis.getY(), z = portcullis.getZ(), width = portcullis.getWidth(), height = portcullis.getHeight();
-        BlockFace actualDirection = actual(portcullis.getDirection());
-        int x2 = x + actualDirection.getModX() * width;
-        int z2 = z + actualDirection.getModZ() * width;
+        int x2 = x + portcullis.getDirection().getModX() * width;
+        int z2 = z + portcullis.getDirection().getModZ() * width;
         if (x > x2) {
             int tmp = x;
             x = x2;
@@ -346,7 +336,7 @@ public class PortcullisMover implements Runnable {
             z = z2;
             z2 = tmp;
         }
-        int locX = location.getBlockX(), locY = location.getBlockY(), locZ = location.getBlockZ();
+        final int locX = location.getBlockX(), locY = location.getBlockY(), locZ = location.getBlockZ();
         if (logger.isLoggable(Level.FINE)) {
             logger.fine("[PorteCoulissante] Portcullis coordinates: " + x + " -> " + x2 + ", " + z + " -> " + z2 + ", " + (y + height));
             logger.fine("[PorteCoulissante] Location: " + locX + ", " + locZ + ", " + locY);
@@ -354,8 +344,8 @@ public class PortcullisMover implements Runnable {
         return (locX >= x) && (locX <= x2) && (locZ >= z) && (locZ <= z2) && (locY == (y + height));
     }
 
-    private boolean areChunksLoaded(World world, Set<Point> chunkCoords) {
-        for (Point point: chunkCoords) {
+    private boolean areChunksLoaded(final World world, final Set<Point> chunkCoords) {
+        for (final Point point: chunkCoords) {
             if (! world.isChunkLoaded(point.x, point.y)) {
                 return false;
             }
@@ -363,32 +353,26 @@ public class PortcullisMover implements Runnable {
         return true;
     }
 
-    private Set<Point> getChunkCoords(int x, int z, BlockFace direction, int width) {
-        Set<Point> chunkCoords = new HashSet<Point>();
-        int firstChunkX = x >> 4;
-        int firstChunkZ = z >> 4;
+    private Set<Point> getChunkCoords(final int x, final int z, final BlockFace direction, final int width) {
+        final Set<Point> chunkCoords = new HashSet<Point>();
+        final int firstChunkX = x >> 4;
+        final int firstChunkZ = z >> 4;
         chunkCoords.add(new Point(firstChunkX, firstChunkZ));
-        BlockFace actualDirection = actual(direction);
-        int secondChunkX = (x + actualDirection.getModX() * (width - 1)) >> 4;
-        int secondChunkZ = (z + actualDirection.getModZ() * (width - 1)) >> 4;
+        final int secondChunkX = (x + direction.getModX() * (width - 1)) >> 4;
+        final int secondChunkZ = (z + direction.getModZ() * (width - 1)) >> 4;
         if ((secondChunkX != firstChunkX) || (secondChunkZ != firstChunkZ)) {
             chunkCoords.add(new Point(secondChunkX, secondChunkZ));
         }
         return chunkCoords;
     }
     
-    private boolean isPortcullisWhole(World world) {
-        int portcullisX = portcullis.getX();
-        int portcullisY1 = portcullis.getY(), portcullisY2 = portcullisY1 + portcullis.getHeight();
-        int portcullisZ = portcullis.getZ();
-        int portcullisWidth = portcullis.getWidth();
-        BlockFace actualPortcullisDirection = actual(portcullis.getDirection());
-        int dx = actualPortcullisDirection.getModX(), dz = actualPortcullisDirection.getModZ();
-        Material portcullisType = portcullis.getType();
-        for (int y = portcullisY1; y < portcullisY2; y++) {
-            int x = portcullisX;
-            int z = portcullisZ;
-            for (int i = 0; i < portcullisWidth; i++) {
+    private boolean isPortcullisWhole(final World world) {
+        final int dx = portcullis.getDirection().getModX(), dz = portcullis.getDirection().getModZ();
+        final Material portcullisType = portcullis.getType();
+        for (int y = portcullis.getY(); y < portcullis.getY() + portcullis.getHeight(); y++) {
+            int x = portcullis.getX();
+            int z = portcullis.getZ();
+            for (int i = 0; i < portcullis.getWidth(); i++) {
                 Block block = world.getBlockAt(x, y, z);
                 if (block.getBlockData().getMaterial() != portcullisType) {
                     return false;
@@ -400,19 +384,15 @@ public class PortcullisMover implements Runnable {
         return true;
     }
     
-    private void explodePortcullis(World world) {
-        int portcullisX = portcullis.getX();
-        int portcullisY1 = portcullis.getY(), portcullisY2 = portcullisY1 + portcullis.getHeight();
-        int portcullisZ = portcullis.getZ();
-        BlockFace actualPortcullisDirection = actual(portcullis.getDirection());
-        int dx = actualPortcullisDirection.getModX(), dz = actualPortcullisDirection.getModZ();
-        Material portcullisType = portcullis.getType();
-        ItemStack itemStack = new ItemStack(portcullisType, 1);
-        for (int y = portcullisY1; y < portcullisY2; y++) {
-            int x = portcullisX;
-            int z = portcullisZ;
+    private void explodePortcullis(final World world) {
+        int dx = portcullis.getDirection().getModX(), dz = portcullis.getDirection().getModZ();
+        final Material portcullisType = portcullis.getType();
+        final ItemStack itemStack = new ItemStack(portcullisType, 1);
+        for (int y = portcullis.getY(); y < portcullis.getY() + portcullis.getHeight(); y++) {
+            int x = portcullis.getX();
+            int z = portcullis.getZ();
             for (int i = 0; i < portcullis.getWidth(); i++) {
-                Block block = world.getBlockAt(x, y, z);
+                final Block block = world.getBlockAt(x, y, z);
                 block.setType(Material.AIR, true);
                 world.dropItemNaturally(block.getLocation(), itemStack);
                 x += dx;
@@ -423,6 +403,8 @@ public class PortcullisMover implements Runnable {
 
     private final PortcullisPlugin plugin;
     private final Set<Material> wallMaterials;
+    @Getter
+    @Setter
     private Portcullis portcullis;
     private int taskId;
     private Status status = Status.IDLE;

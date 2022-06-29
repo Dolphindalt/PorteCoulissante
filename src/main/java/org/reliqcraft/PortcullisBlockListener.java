@@ -33,8 +33,6 @@ import org.bukkit.event.Listener;
 import static org.bukkit.block.BlockFace.*;
 import org.bukkit.event.block.BlockRedstoneEvent;
 
-import static org.reliqcraft.Directions.*;
-
 /**
  *
  * @author pepijn
@@ -132,14 +130,13 @@ public class PortcullisBlockListener implements Listener {
     }
 
     private Portcullis findPortcullisInDirection(final Block block, final BlockFace direction) {
-        final BlockFace actualDirection = actual(direction);
-        final Block powerBlock = block.getRelative(actualDirection);
+        final Block powerBlock = block.getRelative(direction);
         final Material powerBlockType = powerBlock.getBlockData().getMaterial();
         if (isPotentialPowerBlock(powerBlockType)) {
             if (logger.isLoggable(Level.FINE)) {
                 logger.fine("[PorteCoulissante] Potential power block found (type: " + powerBlockType + ")");
             }
-            final Block firstPortcullisBlock = powerBlock.getRelative(actualDirection);
+            final Block firstPortcullisBlock = powerBlock.getRelative(direction);
             if (isPotentialPortcullisBlock(firstPortcullisBlock)) {
                 final Material portcullisType = firstPortcullisBlock.getBlockData().getMaterial();
                 if (logger.isLoggable(Level.FINE)) {
@@ -152,14 +149,14 @@ public class PortcullisBlockListener implements Listener {
                     }
                     return null;
                 }
-                Block lastPortCullisBlock = firstPortcullisBlock.getRelative(actualDirection);
+                Block lastPortCullisBlock = firstPortcullisBlock.getRelative(direction);
                 if (isPortcullisBlock(portcullisType,lastPortCullisBlock)) {
                     int width = 2;
-                    Block nextBlock = lastPortCullisBlock.getRelative(actualDirection);
+                    Block nextBlock = lastPortCullisBlock.getRelative(direction);
                     while (isPortcullisBlock(portcullisType, nextBlock)) {
                         width++;
                         lastPortCullisBlock = nextBlock;
-                        nextBlock = lastPortCullisBlock.getRelative(actualDirection);
+                        nextBlock = lastPortCullisBlock.getRelative(direction);
                     }
                     // At least two fences found in a row. Now search up and down
                     int highestY = firstPortcullisBlock.getLocation().getBlockY();
@@ -190,8 +187,8 @@ public class PortcullisBlockListener implements Listener {
                                 if ((((i == -1) || (i == width)) && (dy != -1) && (dy != height))
                                         || (((dy == -1) || (dy == height)) && (i != -1) && (i != width))) {
                                     // This is one of the blocks to the sides or above or below of the portcullis
-                                    final Block frameBlock = world.getBlockAt(x + i * actualDirection.getModX(), y + dy,
-                                            z + i * actualDirection.getModZ());
+                                    final Block frameBlock = world.getBlockAt(x + i * direction.getModX(), y + dy,
+                                            z + i * direction.getModZ());
                                     if (isPortcullisBlock(portcullisType, frameBlock)) {
                                         if (logger.isLoggable(Level.FINE)) {
                                             logger.fine(
@@ -201,8 +198,8 @@ public class PortcullisBlockListener implements Listener {
                                     }
                                 } else if ((i >= 0) && (i < width) && (dy >= 0) && (dy < height)) {
                                     // This is a portcullis block
-                                    final Block portcullisBlock = world.getBlockAt(x + i * actualDirection.getModX(),
-                                            y + dy, z + i * actualDirection.getModZ());
+                                    final Block portcullisBlock = world.getBlockAt(x + i * direction.getModX(),
+                                            y + dy, z + i * direction.getModZ());
                                     if (!isPortcullisBlock(portcullisType, portcullisBlock)) {
                                         if (logger.isLoggable(Level.FINE)) {
                                             logger.fine("[PorteCoulissante] Block of wrong type ("
